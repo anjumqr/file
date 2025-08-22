@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Custom PDF Viewer</title>
+  <style>
+    body { margin:0; padding:0; text-align:center; background:#f4f4f4; }
+    #the-canvas { border:1px solid #ccc; margin-top:20px; }
+  </style>
+  <script src="pdfjs/pdf.mjs"></script>
+</head>
+<body>
+  <h2>PDF Viewer (pdf.js)</h2>
+  <canvas id="the-canvas"></canvas>
+
+  <script>
+    // Path to your PDF file
+    const url = 'sample.pdf';
+
+    // Setup worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdfjs/pdf.worker.mjs';
+
+    // Load PDF
+    pdfjsLib.getDocument(url).promise.then(function(pdf) {
+      console.log('PDF loaded, total pages: ' + pdf.numPages);
+
+      // Load first page
+      pdf.getPage(1).then(function(page) {
+        console.log('Page loaded');
+
+        let scale = 1.5; // zoom level
+        let viewport = page.getViewport({ scale: scale });
+
+        // Prepare canvas
+        let canvas = document.getElementById('the-canvas');
+        let context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        // Render into canvas
+        page.render({ canvasContext: context, viewport: viewport });
+      });
+    });
+  </script>
+</body>
+</html>
