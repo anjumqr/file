@@ -1,7 +1,8 @@
 <?php
-$imagick = new Imagick();
-$imagick->setResolution(150, 150);
-$imagick->readImage('File/sample.pdf[0]'); // page 1
-$imagick->setImageFormat('png');
-header("Content-Type: image/png");
-echo $imagick;
+require 'vendor/autoload.php';
+
+$pdf = new TCPDF();
+$pdf->AddPage();
+$pdf->SetFont('helvetica', '', 14);
+$pdf->Write(0, 'Hello PDF World!');
+$pdf->Output('example.pdf', 'I'); // I = inline view in browser
